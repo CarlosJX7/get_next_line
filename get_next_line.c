@@ -5,13 +5,12 @@
 
 char	*get_next_line(int fd)
 {
-	char *buf;
-	static char *line;
-	ssize_t bytes;
+	char		*buf;
+	static char	*line;
+	ssize_t		bytes;
 
 	buf = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	bytes = read(fd, buf, BUFFER_SIZE);
-	//printf("bytes: %ld\n", bytes);
 	buf[bytes] = '\0';
 	line = "";
 	while (!ft_strchr(buf, '\n') && (bytes > 0))
