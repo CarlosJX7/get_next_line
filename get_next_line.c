@@ -11,9 +11,6 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
-#include <fcntl.h>
-#include <stdlib.h>
 
 char	*get_next_line(int fd)
 {
@@ -21,14 +18,15 @@ char	*get_next_line(int fd)
 	static char	*line;
 	ssize_t		bytes;
 
-	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	//bytes = read(fd, buffer, BUFFER_SIZE);
 	//line = "";
 	while (!ft_strchr(buffer, '\n') && (bytes > 0))
 	{
 		bytes = read(fd, buffer, BUFFER_SIZE);
+		buffer[bytes] = '\0';
 		ft_strjoin(line, buffer);
 	}
-	buffer[bytes] = '\0';
+
 	return (ft_substr);
 }
