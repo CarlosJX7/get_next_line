@@ -19,14 +19,16 @@ char	*get_next_line(int fd)
 	ssize_t		bytes;
 
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buffer)
+		return (NULL);
 	//bytes = read(fd, buffer, BUFFER_SIZE);
-	//line = "";
+	line = "";
 	while (!ft_strchr(buffer, '\n') && (bytes > 0))
 	{
 		bytes = read(fd, buffer, BUFFER_SIZE);
 		buffer[bytes] = '\0';
 		ft_strjoin(line, buffer);
 	}
-
-	return (ft_substr);
+	free(buffer);
+	return (line);
 }
