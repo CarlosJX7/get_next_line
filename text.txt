@@ -1,7 +1,0 @@
-abcd
-edfg
-hijk
-lmno
-pqrs
-tuvw
-xyz<

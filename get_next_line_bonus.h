@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: carlinaq <carlinaq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/06/05 20:36:02 by carlinaq          #+#    #+#             */
-/*   Updated: 2026/06/05 20:36:04 by carlinaq         ###   ########.fr       */
+/*   Created: 2026/06/07 17:26:47 by carlinaq          #+#    #+#             */
+/*   Updated: 2026/06/07 17:26:49 by carlinaq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,6 @@
 
 # include <stdlib.h>
 # include <unistd.h>
-# include <stdio.h>
-# include <fcntl.h>
-# include <stdlib.h>
 
 char	*get_next_line(int fd);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
