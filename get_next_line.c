@@ -12,47 +12,85 @@
 
 #include "get_next_line.h"
 
-char	*get_next_line(int fd)
+static char	*read_and_join(int fd, char *remain)
 {
-	char			*buffer;
-	static char		*remain;
-	char			*line;
-	ssize_t			bytes;
-	char			*new_line_pos;
-	char			*tmp;
+	char	*buffer;
+	char	*temp;
+	ssize_t	bytes;
 
 	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
-		return(NULL);
-	if (remain)
-		line = ft_strdup(remain);
-	else
-		line = ft_strdup("");
-	if (!line)
-	{
-		free(buffer);
-		return(NULL);
-	}
+		return (NULL);
 	bytes = read(fd, buffer, BUFFER_SIZE);
-	buffer[bytes] = '\0';
 	while (bytes > 0)
 	{
-		printf("1: buffer=>%s<, line = >%s<\n", buffer, line);
-		tmp = line;
-		line = ft_strjoin(line, buffer);
-		free(tmp);
-		printf("2: buffer=>%s<, line = >%s<\n", buffer, line);
-		bytes = read(fd, buffer, BUFFER_SIZE);
 		buffer[bytes] = '\0';
-		new_line_pos = ft_strchr(buffer, '\n');
-		if (new_line_pos)
-		{
-			line = ft_strjoin(line, buffer);
-			remain = ft_strdup(new_line_pos + 1);
-			free(buffer);
-			return ft_substr(line, 0, new_line_pos - line);
-		}
+		temp = remain;
+		remain = ft_strjoin(remain, buffer);
+		free(temp);
+		if (!remain)
+			return (free(buffer), NULL);
+		if (ft_strchr(remain, '\n'))
+			break ;
+		bytes = read(fd, buffer, BUFFER_SIZE);
 	}
-	free(line);
-	return (NULL);
+	free(buffer);
+	if (bytes < 0)
+		return (free(remain), NULL);
+	return (remain);
+}
+
+static char	*extract_line(char *remain)
+{
+	char	*line;
+	size_t	i;
+
+	if (!remain || remain[0] == '\0')
+		return (NULL);
+	i = 0;
+	while (remain[i] && remain[i] != '\n')
+		i++;
+	if (remain[i] == '\n')
+		i++;
+	line = ft_substr(remain, 0, i);
+	return (line);
+}
+
+static char	*update_remain(char *remain)
+{
+	char	*new_remain;
+	size_t	i;
+
+	i = 0;
+	while (remain[i] && remain[i] != '\n')
+		i++;
+	if (remain[i] == '\0')
+	{
+		free(remain);
+		return (NULL);
+	}
+	new_remain = ft_substr(remain, i + 1, ft_strlen(remain) - i);
+	free(remain);
+	return (new_remain);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*remain;
+	char		*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	if (!remain)
+	{
+		remain = ft_strdup("");
+		if (!remain)
+			return (NULL);
+	}
+	remain = read_and_join(fd, remain);
+	if (!remain)
+		return (NULL);
+	line = extract_line(remain);
+	remain = update_remain(remain);
+	return (line);
 }
